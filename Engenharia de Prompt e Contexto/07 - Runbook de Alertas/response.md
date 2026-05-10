@@ -1,0 +1,35 @@
+Prompt:
+```
+# ROLE
+Você é um SRE sênior com experiência em Kubernetes e observabilidade, sabe como atuar em incidentes de alta em ambientes de produção AWS.
+
+# INPUT
+Toda semana, em média 4 vezes, o Beacon dispara o mesmo alerta no canal de plantão: [CRITICAL] High memory usage on Chronos API pods (>85% for 10min).
+- Chronos roda no EKS, namespace production, 6 réplicas com HPA configurado (min 4, max 12, CPU target 70%).
+- Deploy via Argo CD a partir do repositório hvt/chronos-api.
+- Dependências diretas: Ledger (PostgreSQL) e Reactor (filas SQS).
+- Observabilidade: métricas expostas em /metrics, logs centralizados no Beacon, dashboards em Grafana.
+- Ferramentas disponíveis para o plantão: kubectl, aws cli, argocd cli.
+- Canal de plantão: #oncall-chronos no Slack.
+- Time sênior de escalação: @chronos-core (SLA de resposta: 15 minutos em horário comercial, 30 fora).
+
+# STEPS
+1. Confirmar o estado atual dos pods
+2. Analisar métricas de memória (últimas 4 horas, correlacionar com o deploy)
+3. Verificar quando foi o ultimo deploy, se está proximo do aumento de memoria
+4. Avaliar se é memory leak ou se o sizing está subdimensionado
+5. Definir ação imediata de mitigação (ajuste de limits, rollback ou scale horizontal)
+6. Documentar critérios de escalação (quando envolver o time de desenvolvimento)
+7. Propor ajustes definitivos e critério de validação pós-fix
+
+# EXPECTATION
+Produza um runbook procedural completo que qualquer plantonista consiga seguir de ponta a ponta sem depender de quem conhece o sistema
+Para documentação, prencher um arquivo 'response.md' com esse prompt, com o modelo usado, com o resultado (arquivos) e justificativa objetivamente porque o RISE se mostra eficiente para essa tarefa em 50 palavras.
+```
+
+Modelo: claude-sonnet-4-6
+
+Output: runbook-chronos-high-memory.md
+
+Justificativa (50 palavras):
+RISE é eficiente pois ROLE calibra a perspectiva técnica do modelo (SRE sênior em K8s), INPUT fornece o contexto operacional exato do ambiente, STEPS elimina lacunas ao definir a sequência de diagnóstico, e EXPECTATION ancora o formato no público-alvo (plantonista sem contexto). Resultado: runbook autossuficiente e acionável.
